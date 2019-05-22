@@ -13,14 +13,14 @@ class ABThumbnailsManager: NSObject {
     
     var thumbnailViews = [UIImageView]()
 
-    private func addImagesToView(images: [UIImage], view: UIView){
+    private func addImagesToView(images: [UIImage], view: UIView) {
         
         self.thumbnailViews.removeAll()
         var xPos: CGFloat = 0.0
         var width: CGFloat = 0.0
         for image in images{
             DispatchQueue.main.async {
-                if xPos + view.frame.size.height < view.frame.width{
+                if xPos + view.frame.size.height < view.frame.width {
                     width = view.frame.size.height
                 }else{
                     width = view.frame.size.width - xPos
@@ -52,9 +52,9 @@ class ABThumbnailsManager: NSObject {
         return Int(ceil(num))
     }
     
-    func updateThumbnails(view: UIView, videoURL: URL, duration: Float64) -> [UIImageView]{
+    func updateThumbnails(view: UIView, videoURL: URL, duration: Float64) -> Void {
         
-        for view in self.thumbnailViews{
+        for view in self.thumbnailViews {
             DispatchQueue.main.async {
                 view.removeFromSuperview()
             }
@@ -71,6 +71,5 @@ class ABThumbnailsManager: NSObject {
             thumbnails.append(thumbnail)
         }
         self.addImagesToView(images: thumbnails, view: view)
-        return self.thumbnailViews
     }
 }

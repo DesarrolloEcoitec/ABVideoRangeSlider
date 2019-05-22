@@ -45,6 +45,12 @@ public class ABVideoRangeSlider: UIView {
     
     var isUpdatingThumbnails = false
     
+    public override var frame: CGRect {
+        didSet {
+            updateThumbnails()
+        }
+    }
+    
     public enum ABTimeViewPosition{
         case top
         case bottom
@@ -108,11 +114,6 @@ public class ABVideoRangeSlider: UIView {
                                             height: bottomBorderHeight))
         self.addSubview(bottomLine)
         
-        self.addObserver(self,
-                         forKeyPath: "bounds",
-                         options: NSKeyValueObservingOptions(rawValue: 0),
-                         context: nil)
-        
         // Setup Progress Indicator
         
         let progressDrag = UIPanGestureRecognizer(target:self,
@@ -144,12 +145,6 @@ public class ABVideoRangeSlider: UIView {
         endTimeView = ABTimeView(size: CGSize(width: 60, height: 30), position: 1)
         endTimeView.layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         self.addSubview(endTimeView)
-    }
-
-    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "bounds"{
-            self.updateThumbnails()
-        }
     }
     
     // MARK: Public functions
@@ -210,15 +205,10 @@ public class ABVideoRangeSlider: UIView {
     public func updateThumbnails(){
         if !isUpdatingThumbnails{
             self.isUpdatingThumbnails = true
-            let backgroundQueue = DispatchQueue(label: "com.app.queue",
-                                                qos: .background,
-                                                target: nil)
-            backgroundQueue.async {
-                self.thumbnailsManager.updateThumbnails(view: self,
-                                                        videoURL: self.videoURL,
-                                                        duration: self.duration)
-                self.isUpdatingThumbnails = false
-            }
+            self.thumbnailsManager.updateThumbnails(view: self,
+                                                    videoURL: self.videoURL,
+                                                    duration: self.duration)
+            self.isUpdatingThumbnails = false
         }
     }
     
